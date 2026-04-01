@@ -1,0 +1,53 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Register – StyleHub</title>
+  <link rel="stylesheet" href="{% static 'store/css/style.css' %}">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body class="auth-body">
+
+<div class="auth-container">
+  <div class="auth-card">
+    <div class="auth-logo">StyleHub</div>
+    <h2 class="auth-title">Create Account</h2>
+    <p class="auth-sub">Join thousands of fashion lovers</p>
+
+    {% if messages %}
+      {% for message in messages %}
+        <div class="alert alert-error">{{ message }}</div>
+      {% endfor %}
+    {% endif %}
+
+    <form method="POST" action="{% url 'register' %}">
+      {% csrf_token %}
+      <div class="form-group">
+        <label>Username</label>
+        <input type="text" name="username" placeholder="Choose a username" required autofocus/>
+      </div>
+      <div class="form-group">
+        <label>Email</label>
+        <input type="email" name="email" placeholder="Your email address" required/>
+      </div>
+      <div class="form-group">
+        <label>Password</label>
+        <input type="password" name="password1" placeholder="Create a password" required/>
+      </div>
+      <div class="form-group">
+        <label>Confirm Password</label>
+        <input type="password" name="password2" placeholder="Repeat your password" required/>
+      </div>
+      <button type="submit" class="btn-primary full-width">Create Account</button>
+    </form>
+
+    <div class="auth-footer">
+      Already have an account? <a href="{% url 'login' %}">Sign in</a>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

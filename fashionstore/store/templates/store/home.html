@@ -1,0 +1,66 @@
+{% extends 'store/base.html' %}
+{% block title %}Shop – StyleHub{% endblock %}
+
+{% block content %}
+<section class="hero">
+  <div class="hero-inner">
+    <h1>Fashion That Speaks You</h1>
+    <p>Discover the latest trends in clothing &amp; accessories</p>
+  </div>
+</section>
+
+<div class="shop-container">
+
+  <!-- Search + Filter Bar -->
+  <div class="filter-bar">
+    <form method="GET" action="{% url 'home' %}" class="search-form">
+      <input type="text" name="q" value="{{ query }}" placeholder="Search products…" class="search-input"/>
+      <button type="submit" class="btn-primary">Search</button>
+      {% if query or selected_category %}
+        <a href="{% url 'home' %}" class="btn-outline">Clear</a>
+      {% endif %}
+    </form>
+
+    <div class="category-pills">
+      <a href="{% url 'home' %}" class="pill {% if not selected_category %}active{% endif %}">All</a>
+      {% for cat in categories %}
+        <a href="?category={{ cat.slug }}" class="pill {% if selected_category == cat.slug %}active{% endif %}">{{ cat.name }}</a>
+      {% endfor %}
+    </div>
+  </div>
+
+  <!-- Products Grid -->
+  {% if products %}
+  <div class="products-grid">
+    {% for product in products %}
+    <div class="product-card">
+      <div class="product-img-wrap">
+        {% if product.image_url %}
+          <img src="{{ product.image_url }}" alt="{{ product.name }}" class="product-img" loading="lazy"/>
+        {% else %}
+          <div class="product-img-placeholder">👗</div>
+        {% endif %}
+        <span class="product-category-tag">{{ product.category.name }}</span>
+      </div>
+      <div class="product-info">
+        <h3 class="product-name">{{ product.name }}</h3>
+        <p class="product-desc">{{ product.description|truncatechars:70 }}</p>
+        <div class="product-footer">
+          <span class="product-price">${{ product.price }}</span>
+          <a href="{% url 'add_to_cart' product.id %}" class="btn-cart">Add to Cart</a>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  {% else %}
+  <div class="empty-state">
+    <div class="empty-icon">🔍</div>
+    <h3>No products found</h3>
+    <p>Try a different search term or browse all categories.</p>
+    <a href="{% url 'home' %}" class="btn-primary">Browse All</a>
+  </div>
+  {% endif %}
+
+</div>
+{% endblock %}

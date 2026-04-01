@@ -1,0 +1,119 @@
+{% extends 'store/base.html' %}
+{% block title %}Checkout – StyleHub{% endblock %}
+
+{% block content %}
+<div class="checkout-container">
+  <h2 class="page-title">🧾 Checkout</h2>
+
+  <div class="checkout-layout">
+
+    <!-- Delivery Form -->
+    <div class="checkout-form-wrap">
+      <form method="POST" action="{% url 'checkout' %}">
+        {% csrf_token %}
+
+        <div class="form-section">
+          <h3 class="section-title">📦 Delivery Information</h3>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label>Full Name</label>
+              <input type="text" name="full_name" placeholder="John Doe" required value="{{ user.get_full_name }}"/>
+            </div>
+            <div class="form-group">
+              <label>Email</label>
+              <input type="email" name="email" placeholder="you@email.com" required value="{{ user.email }}"/>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Phone Number</label>
+            <input type="tel" name="phone" placeholder="+91 9876543210" required/>
+          </div>
+
+          <div class="form-group">
+            <label>Address</label>
+            <textarea name="address" rows="3" placeholder="House No., Street, Area" required></textarea>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label>City</label>
+              <input type="text" name="city" placeholder="Chennai" required/>
+            </div>
+            <div class="form-group">
+              <label>State</label>
+              <input type="text" name="state" placeholder="Tamil Nadu" required/>
+            </div>
+            <div class="form-group">
+              <label>PIN Code</label>
+              <input type="text" name="pincode" placeholder="600001" required maxlength="10"/>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-section">
+          <h3 class="section-title">💳 Payment Method</h3>
+          <div class="payment-options">
+            <label class="payment-option">
+              <input type="radio" name="payment_method" value="Cash on Delivery" checked/>
+              <span class="payment-label">
+                <span class="payment-icon">💵</span>
+                <span>
+                  <strong>Cash on Delivery</strong>
+                  <small>Pay when your order arrives</small>
+                </span>
+              </span>
+            </label>
+            <label class="payment-option">
+              <input type="radio" name="payment_method" value="UPI"/>
+              <span class="payment-label">
+                <span class="payment-icon">📱</span>
+                <span>
+                  <strong>UPI</strong>
+                  <small>Google Pay, PhonePe, Paytm</small>
+                </span>
+              </span>
+            </label>
+            <label class="payment-option">
+              <input type="radio" name="payment_method" value="Credit / Debit Card"/>
+              <span class="payment-label">
+                <span class="payment-icon">💳</span>
+                <span>
+                  <strong>Credit / Debit Card</strong>
+                  <small>Visa, Mastercard, RuPay</small>
+                </span>
+              </span>
+            </label>
+          </div>
+        </div>
+
+        <button type="submit" class="btn-primary full-width place-order-btn">
+          ✅ Place Order — ${{ cart.get_total }}
+        </button>
+      </form>
+    </div>
+
+    <!-- Order Summary -->
+    <div class="cart-summary">
+      <h3>Order Summary</h3>
+      {% for item in items %}
+      <div class="checkout-item">
+        <span class="checkout-item-name">{{ item.product.name }} <span class="checkout-qty">×{{ item.quantity }}</span></span>
+        <span class="checkout-item-price">${{ item.get_subtotal }}</span>
+      </div>
+      {% endfor %}
+      <div class="summary-divider"></div>
+      <div class="summary-row">
+        <span>Shipping</span>
+        <span class="free-ship">FREE</span>
+      </div>
+      <div class="summary-row total-row">
+        <span>Total</span>
+        <span>${{ cart.get_total }}</span>
+      </div>
+    </div>
+
+  </div>
+</div>
+{% endblock %}

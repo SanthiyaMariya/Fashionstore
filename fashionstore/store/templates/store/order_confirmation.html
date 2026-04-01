@@ -1,0 +1,55 @@
+{% extends 'store/base.html' %}
+{% block title %}Order Confirmed – StyleHub{% endblock %}
+
+{% block content %}
+<div class="confirmation-container">
+
+  <div class="confirmation-card">
+    <div class="confirm-icon">✅</div>
+    <h2>Order Placed Successfully!</h2>
+    <p class="confirm-sub">Thank you, <strong>{{ order.full_name }}</strong>! Your order has been received.</p>
+
+    <div class="order-meta">
+      <div class="order-meta-item">
+        <span class="meta-label">Order ID</span>
+        <span class="meta-value">#{{ order.id }}</span>
+      </div>
+      <div class="order-meta-item">
+        <span class="meta-label">Payment</span>
+        <span class="meta-value">{{ order.payment_method }}</span>
+      </div>
+      <div class="order-meta-item">
+        <span class="meta-label">Status</span>
+        <span class="meta-value status-badge">{{ order.get_status_display }}</span>
+      </div>
+      <div class="order-meta-item">
+        <span class="meta-label">Date</span>
+        <span class="meta-value">{{ order.created_at|date:"d M Y, h:i A" }}</span>
+      </div>
+    </div>
+
+    <div class="order-items-table">
+      <h4>Items Ordered</h4>
+      {% for item in order.items.all %}
+      <div class="confirm-item">
+        <span>{{ item.product_name }} × {{ item.quantity }}</span>
+        <span>${{ item.get_subtotal }}</span>
+      </div>
+      {% endfor %}
+      <div class="confirm-total">
+        <span>Total Paid</span>
+        <span>${{ order.total_amount }}</span>
+      </div>
+    </div>
+
+    <div class="delivery-info">
+      <h4>📦 Delivery To</h4>
+      <p>{{ order.address }}, {{ order.city }}, {{ order.state }} – {{ order.pincode }}</p>
+      <p>📞 {{ order.phone }}</p>
+    </div>
+
+    <a href="{% url 'home' %}" class="btn-primary">Continue Shopping</a>
+  </div>
+
+</div>
+{% endblock %}

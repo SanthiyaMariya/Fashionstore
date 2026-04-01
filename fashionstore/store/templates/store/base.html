@@ -1,0 +1,48 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>{% block title %}StyleHub{% endblock %}</title>
+  <link rel="stylesheet" href="{% static 'store/css/style.css' %}">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+{% if user.is_authenticated %}
+<header class="navbar">
+  <div class="nav-inner">
+    <a href="{% url 'home' %}" class="logo">StyleHub</a>
+    <nav class="nav-links">
+      <a href="{% url 'home' %}">Shop</a>
+      <a href="{% url 'cart' %}" class="cart-link">
+        🛒 Cart
+        {% if cart_count %}<span class="cart-badge">{{ cart_count }}</span>{% endif %}
+      </a>
+      <span class="nav-user">Hi, {{ user.username }}</span>
+      <a href="{% url 'logout' %}" class="btn-logout">Logout</a>
+    </nav>
+  </div>
+</header>
+{% endif %}
+
+{% if messages %}
+<div class="messages">
+  {% for message in messages %}
+  <div class="message {{ message.tags }}">{{ message }}</div>
+  {% endfor %}
+</div>
+{% endif %}
+
+<main>
+  {% block content %}{% endblock %}
+</main>
+
+<footer class="footer">
+  <p>&copy; 2025 StyleHub. All rights reserved.</p>
+</footer>
+
+<script src="{% static 'store/js/main.js' %}"></script>
+</body>
+</html>

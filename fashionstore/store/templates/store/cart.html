@@ -1,0 +1,75 @@
+{% extends 'store/base.html' %}
+{% block title %}My Cart – StyleHub{% endblock %}
+
+{% block content %}
+<div class="cart-container">
+  <h2 class="page-title">🛒 My Cart</h2>
+
+  {% if items %}
+  <div class="cart-layout">
+
+    <!-- Cart Items -->
+    <div class="cart-items">
+      {% for item in items %}
+      <div class="cart-item">
+        <div class="cart-item-img-wrap">
+          {% if item.product.image_url %}
+            <img src="{{ item.product.image_url }}" alt="{{ item.product.name }}" class="cart-item-img"/>
+          {% else %}
+            <div class="cart-item-img-placeholder">👗</div>
+          {% endif %}
+        </div>
+
+        <div class="cart-item-info">
+          <h4 class="cart-item-name">{{ item.product.name }}</h4>
+          <span class="cart-item-category">{{ item.product.category.name }}</span>
+          <p class="cart-item-price">${{ item.product.price }} each</p>
+        </div>
+
+        <div class="cart-item-controls">
+          <form method="POST" action="{% url 'update_cart' item.id %}" class="qty-form">
+            {% csrf_token %}
+            <button type="submit" name="quantity" value="{{ item.quantity|add:'-1' }}" class="qty-btn">−</button>
+            <span class="qty-display">{{ item.quantity }}</span>
+            <button type="submit" name="quantity" value="{{ item.quantity|add:'1' }}" class="qty-btn">+</button>
+          </form>
+          <p class="cart-item-subtotal">${{ item.get_subtotal }}</p>
+          <a href="{% url 'remove_from_cart' item.id %}" class="btn-remove" onclick="return confirm('Remove this item?')">Remove</a>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+
+    <!-- Order Summary -->
+    <div class="cart-summary">
+      <h3>Order Summary</h3>
+      <div class="summary-row">
+        <span>Items ({{ cart.get_item_count }})</span>
+        <span>${{ cart.get_total }}</span>
+      </div>
+      <div class="summary-row">
+        <span>Shipping</span>
+        <span class="free-ship">FREE</span>
+      </div>
+      <div class="summary-divider"></div>
+      <div class="summary-row total-row">
+        <span>Total</span>
+        <span>${{ cart.get_total }}</span>
+      </div>
+      <a href="{% url 'checkout' %}" class="btn-primary full-width checkout-btn">Proceed to Checkout</a>
+      <a href="{% url 'home' %}" class="btn-outline full-width">Continue Shopping</a>
+    </div>
+
+  </div>
+
+  {% else %}
+  <div class="empty-state">
+    <div class="empty-icon">🛍️</div>
+    <h3>Your cart is empty</h3>
+    <p>Looks like you haven't added anything yet. Start shopping!</p>
+    <a href="{% url 'home' %}" class="btn-primary">Browse Products</a>
+  </div>
+  {% endif %}
+
+</div>
+{% endblock %}
